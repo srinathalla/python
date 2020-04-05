@@ -2,33 +2,50 @@ from typing import List
 
 
 class Solution:
-    def fourSum(self, nums: List[int], target: int) -> List[List[int]]:
+    def hasValidPath(self, grid: List[List[int]]) -> bool:
 
-        res = []
-        nums.sort()
-        for i in range(len(nums) - 3):
-            if i == 0 or nums[i] != nums[i-1]:
-                for j in range(i + 1, len(nums) - 2):
-                    if j == i + 1 or nums[j] != nums[j-1]:
-                        k = j + 1
-                        l = len(nums) - 1
-                        while k < l:
-                            if nums[i] + nums[j] + nums[k] + nums[l] == target:
-                                res.append(
-                                    [nums[i], nums[j], nums[k], nums[l]])
-                                while k < l and nums[k] == nums[k+1]:
-                                    k += 1
-                                while k < l and nums[l] == nums[l-1]:
-                                    l -= 1
-                                k += 1
-                                l -= 1
-                            elif nums[i] + nums[j] + nums[k] + nums[l] > target:
-                                l -= 1
-                            else:
-                                k += 1
-        return res
+        visited = [[False] * len(grid[0]) for i in range(len(grid))]
+
+        def path(i, j, p, visited):
+
+            if i >= 0 and i < len(grid) and j >= 0 and j < len(grid[0]) and visited[i][j] == False:
+
+                if grid[i][j] not in p:
+                    return False
+
+                visited[i][j] = True
+
+                if i == len(grid) - 1 and j == len(grid[0]) - 1:
+                    return True
+
+                if grid[i][j] == 1:
+                    if path(i, j-1, visited, set([3, 5])) or path(i, j+1, visited, set([2, 4])):
+                        return True
+
+                if grid[i][j] == 2:
+                    if path(i-1, j, visited, set([3, 6])) or path(i + 1, j, visited, set([5, 6])):
+                        return True
+
+                if grid[i][j] == 3:
+                    if path(i, j-1, visited, set([3, 5])) or path(i + 1, j, visited, set([5, 6])):
+                        return True
+
+                if grid[i][j] == 4:
+                    if path(i, j+1, visited, set(2, 4)) or path(i + 1, j, visited, set([5, 6])):
+                        return True
+
+                if grid[i][j] == 5:
+                    if path(i, j-1, visited, set([3, 5])) or path(i - 1, j, visited, set([3, 6])):
+                        return True
+                if grid[i][j] == 6:
+                    if path(i, j+1, visited, set([2, 4])) or path(i - 1, j, visited, set([3, 6])):
+                        return True
+
+            return False
+
+        return path(0, 0, set([1, 2, 3, 4, 5, 6]), visited)
 
 
+g = [[2, 4, 3], [6, 5, 2]]
 s = Solution()
-#print(s.fourSum([1, 0, -1, 0, -2, 2], 0))
-print(s.fourSum([0, 0, 0, 0], 0))
+print(s.hasValidPath(g))
