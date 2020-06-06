@@ -42,6 +42,6 @@ S = "ab##"
 T = "c#d#"
 s = Solution()
 # print(s.backspaceCompare(S, T))
-S = "ab#c"
-T = "ad#c"
+S = "bbbextm"
+T = "bbb#extm"
 print(s.backspaceCompare(S, T))
