@@ -1,41 +1,19 @@
-import collections
-import heapq
 from typing import List
-from collections import Counter
 
 
 class Solution:
-    def maxArea(self, h: int, w: int, hc: List[int], vc: List[int]) -> int:
-
+    def numSubseq(self, arr: List[int], k: int) -> int:
+        n = len(arr)
         mod = 10**9 + 7
-        hc.sort()
-        vc.sort()
-        n = len(hc)
-        m = len(vc)
-
-        vp = 0
-        mv = 0
-        for j in range(m):
-            ma = max(mv, (vc[j] - vp))
-            vp = vc[j]
-        mv = max(mv, w - vp)
-
-        hp = 0
-        mh = 0
-        for i in range(n):
-            mh = max(ma, (hc[i] - hp))
-            hp = hc[i]
-        mh = max(mh, (h - hp))
-
-        return (mv * mh) % mod
-
-
-h = 5
-w = 4
-hc = [3, 1]
-vc = [1]
+        dp = [[0 for j in range(n + 1)]
+              for i in range(k + 1)]
+        for i in range(1, k + 1):
+            for j in range(1, n + 1):
+                dp[i][j] = dp[i][j - 1]
+                if arr[j - 1] <= i and arr[j - 1] > 0:
+                    dp[i][j] = (dp[i][j] + dp[i - arr[j - 1]][j - 1] + 1) % mod
+        return dp[k][n]
 
 
 s = Solution()
-
-print(s.maxArea(h, w, hc, vc))
+print(s.numSubseq([3, 5, 6, 7], 9))
